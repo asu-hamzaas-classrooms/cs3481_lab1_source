@@ -1,0 +1,25 @@
+Type:
+make
+to compile and link the code.
+Type
+make run
+or
+make
+./lab1
+to run the tests.
+
+You can also run it with options:
+To show info about individual tests that fail:
+./lab1 -v
+To show info about individual tests that fail and abort after first failure:
+./lab1 -e -v
+To abort after first failure:
+./lab1 -e 
+To get help info:
+./lab1 -h 
+
+
+If you want to implement the Tools.C methods in the order in which they are tested, it
+is convenient to use both the -v and -e options.  
+
+If you want to skip around implementing the methods, don't use the -e option. 
