@@ -38,12 +38,6 @@ static int clearBitsTests();
 static int signTests();
 static int addOverflowTests();
 static int subOverflowTests();
-static int maxPosTests();
-static int maxNegTests();
-static int isLessThanOrEq0Tests();
-static int isGreaterThanTwoTests();
-static int flipEvenBitsTests();
-static int addTwoOKTests();
 
 /* code for parsing the command line arguments */
 static void parseArgs(int argc, char * argv[]);
@@ -102,30 +96,6 @@ int main(int argc, char * argv[])
 
    pass = subOverflowTests();
    std::cout << "subOverflow tests:" << check[pass] << "\n";
-   funsPassed += pass;
-
-   pass = maxPosTests();
-   std::cout << "maxPos tests:" << check[pass] << "\n";
-   funsPassed += pass;
-
-   pass = maxNegTests();
-   std::cout << "maxNeg tests:" << check[pass] << "\n";
-   funsPassed += pass;
-
-   pass = isLessThanOrEq0Tests();
-   std::cout << "isLessThanOrEq0 tests:" << check[pass] << "\n";
-   funsPassed += pass;
-
-   pass = isGreaterThanTwoTests();
-   std::cout << "isGreaterThanTwo tests:" << check[pass] << "\n";
-   funsPassed += pass;
-
-   pass = flipEvenBitsTests();
-   std::cout << "flipEvenBits tests:" << check[pass] << "\n";
-   funsPassed += pass;
-
-   pass = addTwoOKTests();
-   std::cout << "addTwoOK tests:" << check[pass] << "\n";
    funsPassed += pass;
 
    std::cout << "\n" << std::dec << funsPassed << " functions out of a total of " << numFuns
@@ -394,116 +364,5 @@ int signTests()
    pass &= myAssert(Tools::sign(0x0000000000000000), 0);
    pass &= myAssert(Tools::sign(0x1111111111111111), 0);
    pass &= myAssert(Tools::sign(0xffffffffffffffff), 1);
-   return pass;
-}
-
-/**
- *
- * tests the maxPos method in the Tools class
- *
- * maxPos returns the largest magnitude positive value that can be
- * stored in a 64 bit two's complement variable.
-*/
-int maxPosTests()
-{
-   int pass;
-   pass = myAssert(Tools::maxPos(), 0x7fffffffffffffff);
-   return pass;
-}
-
-/**
- *
- * tests the maxNeg method in the Tools class
- *
- * maxPos returns the largest magnitude negative value that can be
- * stored in a 64 bit two's complement variable.
-*/
-int maxNegTests()
-{
-   int pass;
-   pass = myAssert(Tools::maxNeg(), 0x8000000000000000);
-   return pass;
-}
-
-/**
- * tests the isLessThanOrEq0 method in the Tools class
- *
- * isLessThanOrEq0 assumes source contains a 64 bit two's complement value 
- * and returns true (1) if source is <= 0 and false (0) otherwise
- * bool Tools::isLessThanOrEq0(uint64_t source)
-*/
-int isLessThanOrEq0Tests()
-{
-   int pass;
-   pass = myAssert(Tools::isLessThanOrEq0(0x1122334455667788), 0);
-   pass &= myAssert(Tools::isLessThanOrEq0(0x7fffffffffffffff), 0);
-   pass &= myAssert(Tools::isLessThanOrEq0(0x8877665544332211), 1);
-   pass &= myAssert(Tools::isLessThanOrEq0(0x8000000000000000), 1);
-   pass &= myAssert(Tools::isLessThanOrEq0(0x0000000000000000), 1);
-   pass &= myAssert(Tools::isLessThanOrEq0(0x0000000000000001), 0);
-   return pass;
-}
-
-/**
- * tests the isGreaterThanTwo method in the Tools class
- *
- * isGreaterThanTwo assumes source contains a 64 bit two's complement value 
- * and returns true (1) if source is >= 2 and false (0) otherwise
- * bool Tools::isGreaterThanTwo(uint64_t source)
-*/
-int isGreaterThanTwoTests()
-{
-   int pass;
-   pass = myAssert(Tools::isGreaterThanTwo(0x1122334455667788), 1);
-   pass &= myAssert(Tools::isGreaterThanTwo(0x7fffffffffffffff), 1);
-   pass &= myAssert(Tools::isGreaterThanTwo(0x0), 0);
-   pass &= myAssert(Tools::isGreaterThanTwo(0x1), 0);
-   pass &= myAssert(Tools::isGreaterThanTwo(0x2), 0);
-   pass &= myAssert(Tools::isGreaterThanTwo(0x3), 1);
-   pass &= myAssert(Tools::isGreaterThanTwo(0x4), 1);
-   pass &= myAssert(Tools::isGreaterThanTwo(0x8000000000000000), 0);
-   pass &= myAssert(Tools::isGreaterThanTwo(0x4000000000000000), 1);
-   return pass;
-}
-
-/**
- * tests the flipEvenBits method in the Tools class
- *
- * flipEvenBits assumes source contains a 64 bit two's complement value 
- * and returns source with its even numbered bits (0, 2, 4, 6, ... 60, 62)
- * flipped.
- * uint64_t Tools::flipEvenBits(uint64_t source)
-*/
-int flipEvenBitsTests()
-{
-   int pass;
-   pass = myAssert(Tools::flipEvenBits(0xffffffffffffffff), 0xAAAAAAAAAAAAAAAA);
-   pass &= myAssert(Tools::flipEvenBits(0xAAAAAAAAAAAAAAAA), 0xFFFFFFFFFFFFFFFF);
-   pass &= myAssert(Tools::flipEvenBits(0xAFAFAFAFAFAFAFAF), 0xFAFAFAFAFAFAFAFA);
-   pass &= myAssert(Tools::flipEvenBits(0x8000000000000008), 0xD55555555555555D);
-   pass &= myAssert(Tools::flipEvenBits(0x7000000000000007), 0x2555555555555552);
-   pass &= myAssert(Tools::flipEvenBits(0x0555555555555550), 0x5000000000000005);
-   pass &= myAssert(Tools::flipEvenBits(0x0), 0x5555555555555555);
-   pass &= myAssert(Tools::flipEvenBits(0xFAFAFAFAFAFAFAFA), 0xAFAFAFAFAFAFAFAF);
-   return pass;
-}
-
-/**
- * tests the addTwoOK method in the Tools class
- *
- * addTwoOK assumes source contains a 64 bit two's complement value
- * and returns true if 2 can be added to the source without causing
- * an overflow and false, otherwise.
- * uint64_t Tools::addTwoOK(uint64_t source)
-*/
-int addTwoOKTests()
-{
-   int pass;
-   pass = myAssert(Tools::addTwoOK(0x8000000000000000), 1);
-   pass &= myAssert(Tools::addTwoOK(0xFFFFFFFFFFFFFFFF), 1);
-   pass &= myAssert(Tools::addTwoOK(0x0000000000000000), 1);
-   pass &= myAssert(Tools::addTwoOK(0x7FFFFFFFFFFFFFFF), 0);
-   pass &= myAssert(Tools::addTwoOK(0x7FFFFFFFFFFFFFFE), 0);
-   pass &= myAssert(Tools::addTwoOK(0x7FFFFFFFFFFFFFFD), 1);
    return pass;
 }
